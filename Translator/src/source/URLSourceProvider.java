@@ -19,7 +19,6 @@ public class URLSourceProvider implements SourceProvider {
         try {
             URL url = new URL(pathToSource);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
             connection.connect();
             if (connection.getResponseCode() != 200) {
                 return false;
@@ -35,12 +34,12 @@ public class URLSourceProvider implements SourceProvider {
         StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(pathToSource);
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-        String currentLine;
-        while ((currentLine = reader.readLine()) != null) {
-            stringBuilder.append(currentLine).append(LINE_SEPARATOR);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                stringBuilder.append(currentLine).append(LINE_SEPARATOR);
+            }
         }
-        reader.close();
 
         return stringBuilder.toString();
     }

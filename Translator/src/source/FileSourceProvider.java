@@ -30,11 +30,11 @@ public class FileSourceProvider implements SourceProvider {
     public String load(String pathToSource) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToSource));
-        while (bufferedReader.ready()) {
-            stringBuilder.append(bufferedReader.readLine()).append(LINE_SEPARATOR);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToSource))) {
+            while (bufferedReader.ready()) {
+                stringBuilder.append(bufferedReader.readLine()).append(LINE_SEPARATOR);
+            }
         }
-        bufferedReader.close();
 
         return stringBuilder.toString();
     }
